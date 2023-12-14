@@ -1,3 +1,88 @@
-<title>Github Pages Test</title>
-<h1>This is my website!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Music Player</title>
+    <style>
+        body {
+            font-family: 'Josefin Sans', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        #container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        button {
+            font-size: 16px;
+            margin: 5px;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            background-color: #4caf50;
+            color: #fff;
+            border-radius: 5px;
+        }
+        #fileInput {
+            margin: 10px;
+        }
+        #songTitle {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Simple Music Player</h1>
+        
+        <button onclick="selectFolder()">Select Folder</button>
+        
+        <br>
+        
+        <button onclick="playPause()">Play/Pause</button>
+        <button onclick="stop()">Stop</button>
+        
+        <div id="songTitle"></div>
+    </div>
+    
+    <script>
+        let audio = new Audio();
 
+        async function selectFolder() {
+            try {
+                const folderHandle = await window.showDirectoryPicker();
+                const fileHandle = await folderHandle.getFile();
+                const file = await fileHandle.getFile();
+
+                if (file) {
+                    audio.src = URL.createObjectURL(file);
+                    document.getElementById('songTitle').innerText = `Now Playing: ${file.name}`;
+                    audio.play();
+                }
+            } catch (error) {
+                console.error('Error selecting folder:', error);
+            }
+        }
+
+        function playPause() {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+
+        function stop() {
+            audio.pause();
+            audio.currentTime = 0;
+        }
+    </script>
+</body>
+</html>
